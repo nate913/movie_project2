@@ -9,13 +9,13 @@ var router = express.Router();
 var models = require('../models');
 
 // the movie database keyword search
-router.post('/keyword', function(req, res){
+router.post('/keyword', function (req, res) {
 	var queryKeyword = req.body.searchField;
 	var queryURL = 'https://api.themoviedb.org/3/search/person?api_key=1cf863948f045b7f12721d5ee2275e8b&language=en-US&query=' + queryKeyword + '&page=1&include_adult=true';
-	request(queryURL, function(err, response, body) {
+	request(queryURL, function (err, response, body) {
 		var dataObj = JSON.parse(body);
 
-		var movieTitles = []; 
+		var movieTitles = [];
 		for (var i = 0; i < dataObj.results.length; i++) {
 			var results = dataObj.results[i];
 			for (var j = 0; j < results.known_for.length; j++) {
@@ -29,7 +29,7 @@ router.post('/keyword', function(req, res){
 		}
 
 
-		var moviePosterPath = []; 
+		var moviePosterPath = [];
 		for (var i = 0; i < dataObj.results.length; i++) {
 			var results = dataObj.results[i];
 			for (var j = 0; j < results.known_for.length; j++) {
@@ -48,7 +48,7 @@ router.post('/keyword', function(req, res){
 			moviePosterPath: posterPath
 		};
 
-		res.render('index' , hbsObj);
+		res.render('index', hbsObj);
 
 		// if (req.isAuthenticated()) {
 		// 	res.render('user', hbsObj);
@@ -60,8 +60,8 @@ router.post('/keyword', function(req, res){
 
 // user and watchlist pages api
 router.route('/watchlist/:movieID?')
-	.get(isLoggedIn, function(req, res) {
-		models.watchlist.findAll({ where: { userId: req.user.id }}).then(function(list) { 
+	.get(isLoggedIn, function (req, res) {
+		models.watchlist.findAll({ where: { userId: req.user.id } }).then(function (list) {
 			var watchlist = JSON.stringify(list);
 			var dataObj = JSON.parse(watchlist);
 
@@ -73,11 +73,11 @@ router.route('/watchlist/:movieID?')
 			res.render('watchlist', hbsObj);
 		});
 	})
-	.post(isLoggedIn, function(req, res) {
+	.post(isLoggedIn, function (req, res) {
 		var movie = {};
 		var movieId = req.body.movieID;
-		var queryURL = 'https://api.themoviedb.org/3/movie/'+movieId+'?api_key=85b3a680df0c4f07bb1e32b948cbe4c6&language=en-US'
-		request(queryURL, function(err, response, body) {
+		var queryURL = 'https://api.themoviedb.org/3/movie/' + movieId + '?api_key=85b3a680df0c4f07bb1e32b948cbe4c6&language=en-US'
+		request(queryURL, function (err, response, body) {
 			body = JSON.parse(body);
 			movie = {
 				title: body.title,
@@ -90,27 +90,27 @@ router.route('/watchlist/:movieID?')
 				userId: req.user.id
 			}
 
-			models.watchlist.findOrCreate({ where: movie }).then(function(data) {
+			models.watchlist.findOrCreate({ where: movie }).then(function (data) {
 
 			});
 		});
-		
+
 	})
-	.delete(isLoggedIn, function(req, res) {
-		models.watchlist.destroy({ where: { id: req.body.id }}).then(function() {
+	.delete(isLoggedIn, function (req, res) {
+		models.watchlist.destroy({ where: { id: req.body.id } }).then(function () {
 			res.redirect('/api/watchlist');
 		});
 	});
 
-router.get('/userData', isLoggedIn, function(req, res) {
+router.get('/userData', isLoggedIn, function (req, res) {
 	res.json(req.user);
 });
 
 //Search movie using themoviedb
-router.put('/movieSearch', function(req, res) {
+router.put('/movieSearch', function (req, res) {
 	var queryMovie = req.body.movie;
-	var queryURL = 'http://api.themoviedb.org/3/search/movie?api_key=85b3a680df0c4f07bb1e32b948cbe4c6&query=' +queryMovie
-	request(queryURL, function(err, response, body) {
+	var queryURL = 'http://api.themoviedb.org/3/search/movie?api_key=85b3a680df0c4f07bb1e32b948cbe4c6&query=' + queryMovie
+	request(queryURL, function (err, response, body) {
 		var dataObj = JSON.parse(body);
 		var hbsObj = {
 			title: "MovieGoers - User",
@@ -120,38 +120,40 @@ router.put('/movieSearch', function(req, res) {
 		};
 
 		if (req.isAuthenticated()) {
-			res.render('user', hbsObj);	
+			res.render('user', hbsObj);
 		} else {
 			res.render('index', hbsObj);
 		}
 	});
 });
 
-		//pp -  now working popular movie img is broken
+//pp -  now working popular movie img is broken
 
 var options = {
-    uri: 'https://api.themoviedb.org/3/discover/movie?api_key=85b3a680df0c4f07bb1e32b948cbe4c6&sort_by=popularity.desc&include_adult=true',
-    headers: {
-        'User-Agent': 'Request-Promise'
-    },
-    json: true // Automatically parses the JSON string in the response 
+	uri: 'https://api.themoviedb.org/3/discover/movie?api_key=85b3a680df0c4f07bb1e32b948cbe4c6&sort_by=popularity.desc&include_adult=true',
+	headers: {
+		'User-Agent': 'Request-Promise'
+	},
+	json: true // Automatically parses the JSON string in the response 
 };
- 
- router.get('/popular', function(req, res, next) {
-rp(options)
-    .then(function (body) { 
-        console.log(body.results);
-         var hbsObj = {data: body.results,
-		               poster: body.results.poster_path,
-		               username: req.user.username};
-	              //  res.json(body);
-		        console.log("hbsObj:===========" + body.results);
-		        res.render('popular', hbsObj);
-		       // res.redirect('/api/popular');
-    })
-    .catch(function (err) {
-        // API call failed... 
-    });
+
+router.get('/popular', function (req, res, next) {
+	rp(options)
+		.then(function (body) {
+			console.log(body.results);
+			var hbsObj = {
+				data: body.results,
+				poster: body.results.poster_path,
+				username: req.user.username
+			};
+			//  res.json(body);
+			console.log("hbsObj:===========" + body.results);
+			res.render('popular', hbsObj);
+			// res.redirect('/api/popular');
+		})
+		.catch(function (err) {
+			// API call failed... 
+		});
 });
 
 //pp trying to load latest movies on user page
@@ -163,11 +165,13 @@ var options = {
 	json: true // Automatically parses the JSON string in the response 
 };
 
-router.get('/user', function(req, res, next) {
+router.get('/user', function (req, res, next) {
 	rp(options).then(function (body) {
-		var hbsObj = {data: body.results,
-		poster: body.results.poster_path,
-		username: req.user.username};
+		var hbsObj = {
+			data: body.results,
+			poster: body.results.poster_path,
+			username: req.user.username
+		};
 		res.render('user', hbsObj);
 	}).catch(function (err) {
 		// API call failed... 

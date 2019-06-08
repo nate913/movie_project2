@@ -1,4 +1,4 @@
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
 	var Watchlist = sequelize.define('watchlist', {
 		title: {
 			type: DataTypes.STRING,
@@ -31,12 +31,12 @@ module.exports = function(sequelize, DataTypes) {
 	});
 
 	// set association to movies in watchlist by user
-	Watchlist.associate = function(models) {
+	Watchlist.associate = function (models) {
 		Watchlist.belongsTo(models.user, {
 			foreignKey: {
 				allowNull: false
 			}
 		});
 	}
-	return Watchlist; 
+	return Watchlist;
 }

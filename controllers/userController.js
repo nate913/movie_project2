@@ -12,25 +12,25 @@ var keys = require('../public/assets/js/keys.js');
 // keys already in key file
 var client = new Twitter(keys.twitterKeys);
 
-var getTweets = new Promise( 
-	function(resolve, reject) {
-		var params = {screen_name: 'triharder23'};
-		client.get('statuses/user_timeline', params, function(error, tweets, response) {
+var getTweets = new Promise(
+	function (resolve, reject) {
+		var params = { screen_name: 'triharder23' };
+		client.get('statuses/user_timeline', params, function (error, tweets, response) {
 			if (!error) {
-				resolve( tweets);
+				resolve(tweets);
 			}
 			else {
 				// return error;
-				reject( error);
+				reject(error);
 			}
 		});
 	}
 );
 
-router.get('/keyword', function(req, res){
+router.get('/keyword', function (req, res) {
 	var queryKeyword = req.body.searchField;
-	var queryURL = 'https://www.themoviedb.org/search?query='+queryKeyword;
-	request(queryURL, function(err, response, body) {
+	var queryURL = 'https://www.themoviedb.org/search?query=' + queryKeyword;
+	request(queryURL, function (err, response, body) {
 		var dataObj = JSON.parse(body);
 		var hbsObj = {
 			title: "Movies - User",
@@ -44,7 +44,7 @@ router.get('/keyword', function(req, res){
 	});
 });
 
-router.get ('/', function(req, res) {
+router.get('/', function (req, res) {
 	var data = {
 		title: 'Movies',
 	}
@@ -55,7 +55,7 @@ router.get ('/', function(req, res) {
 		// getTweets.then( function(tweetsList){
 		// 	// passing tweets to handlebars page
 		// 	data.tweets = tweetsList;
-			res.render('index', data);
+		res.render('index', data);
 		//});
 	}
 });
@@ -63,7 +63,7 @@ router.get ('/', function(req, res) {
 //pp - user route path changed from /user to /api/user to display coming soon
 //movies
 router.route('/sign-up')
-	.get(function(req, res) {
+	.get(function (req, res) {
 		res.render('sign-up', { title: 'Movies - Sign Up' });
 	})
 	.post(passport.authenticate('local-signup', {
@@ -72,7 +72,7 @@ router.route('/sign-up')
 	}));
 
 router.route('/login')
-	.get(function(req, res) {
+	.get(function (req, res) {
 		res.render('login', { title: 'Movies - Login' });
 	})
 	.post(passport.authenticate('local-login', {
@@ -80,14 +80,14 @@ router.route('/login')
 		failureRedirect: '/login'
 	}));
 
-router.get('/logout', function(req, res) {
-	req.session.destroy(function(err) {
+router.get('/logout', function (req, res) {
+	req.session.destroy(function (err) {
 		res.redirect('/');
 	});
 });
 
-router.get('/user', isLoggedIn, function(req, res) {
-	res.render('user', { title: 'MovieGoers - '+req.user.username, username: req.user.username })
+router.get('/user', isLoggedIn, function (req, res) {
+	res.render('user', { title: 'MovieGoers - ' + req.user.username, username: req.user.username })
 });
 
 module.exports = router;

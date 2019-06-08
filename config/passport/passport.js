@@ -1,6 +1,6 @@
 var bCrypt = require('bcrypt-nodejs');
 
-module.exports = function(passport, user) {
+module.exports = function (passport, user) {
 	var User = user;
 	var localStrategy = require('passport-local').Strategy;
 
@@ -9,10 +9,10 @@ module.exports = function(passport, user) {
 		usernameField: 'username',
 		passwordField: 'password',
 		passReqToCallback: true
-	}, function(req, username, password, done) {
+	}, function (req, username, password, done) {
 
 		// function to salt and hash passwords
-		var generateHash = function(password) {
+		var generateHash = function (password) {
 			return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
 		};
 
@@ -21,7 +21,7 @@ module.exports = function(passport, user) {
 			where: {
 				username: username
 			}
-		}).then(function(user) {
+		}).then(function (user) {
 
 			// check if username is taken already, else create user
 			if (user) {
@@ -36,7 +36,7 @@ module.exports = function(passport, user) {
 				};
 
 				// create new user in database
-				User.create(userData).then(function(newUser, created) {
+				User.create(userData).then(function (newUser, created) {
 					if (!newUser) {
 						return done(null, false);
 					}
@@ -50,13 +50,13 @@ module.exports = function(passport, user) {
 	}));
 
 	// serialize user
-	passport.serializeUser(function(user, done) {
+	passport.serializeUser(function (user, done) {
 		done(null, user.id);
 	});
 
 	// deserialize user
-	passport.deserializeUser(function(id, done) {
-		User.findById(id).then(function(user) {
+	passport.deserializeUser(function (id, done) {
+		User.findById(id).then(function (user) {
 			if (user) {
 				done(null, user.get());
 			} else {
@@ -70,11 +70,11 @@ module.exports = function(passport, user) {
 		usernameField: 'username',
 		passwordField: 'password',
 		passReqToCallback: true
-	}, function(req, username, password, done) {
+	}, function (req, username, password, done) {
 		var User = user;
 
 		// function to compare hashed and salted passwords
-		var isValidPassword = function(userPass, password) {
+		var isValidPassword = function (userPass, password) {
 			return bCrypt.compareSync(password, userPass);
 		}
 
@@ -83,7 +83,7 @@ module.exports = function(passport, user) {
 			where: {
 				username: username
 			}
-		}).then(function(user) {
+		}).then(function (user) {
 			// check if user name and password are correct
 			if (!user) {
 				return done(null, false, { message: 'Username does not exist.' });
@@ -96,7 +96,7 @@ module.exports = function(passport, user) {
 			var userInfo = user.get();
 			return done(null, userInfo);
 
-		}).catch(function(err) {
+		}).catch(function (err) {
 			console.log('Error: ' + err);
 			return done(null, false, { message: 'Something went wrong with your login.' });
 		});

@@ -1,4 +1,4 @@
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
 	var User = sequelize.define('user', {
 		username: {
 			type: DataTypes.STRING,
@@ -25,7 +25,7 @@ module.exports = function(sequelize, DataTypes) {
 	});
 
 	// set association to movies in watchlist by user
-	User.associate = function(models) {
+	User.associate = function (models) {
 		User.hasMany(models.watchlist, {
 			onDelete: 'cascade'
 		});

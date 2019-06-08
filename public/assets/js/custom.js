@@ -1,10 +1,10 @@
-function toggleDiv(){
+function toggleDiv() {
 
     if ($(window).width() < 768) {
 
-            $("nav.navbar-default").hide();
+        $("nav.navbar-default").hide();
 
-    }else{
+    } else {
 
         $("nav.navbar-default").show();
 
@@ -15,26 +15,26 @@ function toggleDiv(){
 $(document).ready(function () {
     toggleDiv();
 
-    $(window).resize(function(){
+    $(window).resize(function () {
         toggleDiv();
     });
 
 });
 
 // function showPassword() {
-    
+
 //     var key_attr = $('#key').attr('type');
-    
+
 //     if(key_attr != 'text') {
-        
+
 //         $('.checkbox').addClass('show');
 //         $('#key').attr('type', 'text');
-        
+
 //     } else {
-        
+
 //         $('.checkbox').removeClass('show');
 //         $('#key').attr('type', 'password');
-        
+
 //     }
-    
+
 // }
