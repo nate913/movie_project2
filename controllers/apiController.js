@@ -8,7 +8,7 @@ var router = express.Router();
 
 var models = require('../models');
 
-// Tarek: the movie database keyword search
+// the movie database keyword search
 router.post('/keyword', function(req, res){
 	var queryKeyword = req.body.searchField;
 	var queryURL = 'https://api.themoviedb.org/3/search/person?api_key=1cf863948f045b7f12721d5ee2275e8b&language=en-US&query=' + queryKeyword + '&page=1&include_adult=true';
