@@ -2,7 +2,7 @@
 var express = require('express');
 var passport = require('passport');
 var fs = require("fs")
-var Twitter = require('twitter');
+
 var request = require('request');
 
 // setup router
@@ -10,22 +10,7 @@ var router = express.Router();
 
 var keys = require('../public/assets/js/keys.js');
 // keys already in key file
-var client = new Twitter(keys.twitterKeys);
 
-var getTweets = new Promise(
-	function (resolve, reject) {
-		var params = { screen_name: 'triharder23' };
-		client.get('statuses/user_timeline', params, function (error, tweets, response) {
-			if (!error) {
-				resolve(tweets);
-			}
-			else {
-				// return error;
-				reject(error);
-			}
-		});
-	}
-);
 
 router.get('/keyword', function (req, res) {
 	var queryKeyword = req.body.searchField;
