@@ -1,4 +1,4 @@
--- Creates the "movies" database --
-CREATE DATABASE movies_db;
--- Uses "movies" database --
-USE movies_db;
+-- Creates the "Road Trip" database --
+CREATE DATABASE roadTripdb;
+-- Uses "Road Trip" database --
+USE roadTripdb;
